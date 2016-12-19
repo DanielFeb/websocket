@@ -1,0 +1,14 @@
+<head>
+    <script type="text/javascript" src="jquery.js"></script>
+    <script type="text/javascript" src="socketService.js" ></script>
+</head>
+<body>
+    <input id="myTopic" type="text"></input>
+    <button onclick="svc_connectPlatform()">connect</button><br/>
+
+    <textarea id="myMessage"></textarea>
+    <button onclick="svc_send()">send</button><br/>
+
+    <textarea id="output"></textarea><br/>
+    <button onclick="svc_close()">close</button>
+</body>

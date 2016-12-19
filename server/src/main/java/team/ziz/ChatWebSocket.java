@@ -9,17 +9,18 @@ import java.util.*;
 
 
 public class ChatWebSocket extends WebSocketServer {
+    public static int portNumber = 4444;
 
-    public static Map<String, List<WebSocket>> socketMap = new HashMap<String, List<WebSocket>>();//ÆµµÀ-½øÈëÆµµÀÓÃ»§µÄÁ¬½ÓÁĞ±í
+    public static Map<String, List<WebSocket>> socketMap = new HashMap<String, List<WebSocket>>();//é¢‘é“-è¿›å…¥é¢‘é“ç”¨æˆ·çš„è¿æ¥åˆ—è¡¨
 
     /**
-     * ·şÎñ¶ËÆô¶¯
+     * æœåŠ¡ç«¯å¯åŠ¨
      * @param args
      */
     public static void main(String[] args) {
-        InetSocketAddress address = new InetSocketAddress(4444);
+        InetSocketAddress address = new InetSocketAddress(portNumber);
         ChatWebSocket socket = new ChatWebSocket(address);
-        socket.start();//Æô¶¯websocket·şÎñÆ÷½ø³Ì
+        socket.start();//å¯åŠ¨websocketæœåŠ¡å™¨è¿›ç¨‹
     }
 
     public ChatWebSocket(InetSocketAddress address) {
@@ -37,10 +38,10 @@ public class ChatWebSocket extends WebSocketServer {
     @Override
     public void onOpen(WebSocket conn, ClientHandshake handshake) {
         System.out.println("onOpen:" + handshake.getResourceDescriptor());
-        String desc = handshake.getResourceDescriptor().substring(1);//ÀıÈçÒ³ÃæÇëÇó£º'ws://127.0.0.1:4444/'+topSid; desc»ñÈ¡µ½µÄ¾ÍÊÇtopSid¡£´Ë´¦ÒÔdescÇø·Ö²»Í¬·ÖÀàµÄÁ¬½Ó£¬ÓÃÓÚºóĞøÍ¨Ñ¶  
+        String desc = handshake.getResourceDescriptor().substring(1);//ä¾‹å¦‚é¡µé¢è¯·æ±‚ï¼š'ws://127.0.0.1:4444/'+topSid; descè·å–åˆ°çš„å°±æ˜¯topSidã€‚æ­¤å¤„ä»¥descåŒºåˆ†ä¸åŒåˆ†ç±»çš„è¿æ¥ï¼Œç”¨äºåç»­é€šè®¯
         if(socketMap.get(desc) == null){
             List<WebSocket> list = new ArrayList<WebSocket>();
-            list.add(conn);//connect³É¹¦Ê±ºòÖ´ĞĞ  
+            list.add(conn);//connectæˆåŠŸæ—¶å€™æ‰§è¡Œ
             socketMap.put(desc, list);
         } else {
             socketMap.get(desc).add(conn);
@@ -54,8 +55,8 @@ public class ChatWebSocket extends WebSocketServer {
         Set<String> setList = socketMap.keySet();
         for (String string : setList) {
             if (socketMap.get(string).contains(conn)) {
-                socketMap.get(string).remove(conn);//É¾³ıÁ¬½Ó  
-                if (socketMap.get(string).isEmpty()) {//Á¬½ÓÎª¿ÕÊ±Çå³ı  
+                socketMap.get(string).remove(conn);//åˆ é™¤è¿æ¥
+                if (socketMap.get(string).isEmpty()) {//è¿æ¥ä¸ºç©ºæ—¶æ¸…é™¤
                     socketMap.remove(string);
                 }
                 break;
@@ -67,11 +68,17 @@ public class ChatWebSocket extends WebSocketServer {
     @Override
     public void onMessage(WebSocket conn, String message) {
         System.out.println("onMessage:" + message);
-        /*List<WebSocket> socketList = socketMap.get(message); 
+        List<WebSocket> socketList = socketMap.get(message);
+
+        if(socketList == null){
+            System.out.println("socketList is empty");
+            return;
+        }
+
         for (WebSocket webSocket : socketList) { 
-            webSocket.send("ÒÑÊÕµ½~"); 
-        }*/
-        sendInAllChannel("~ÒÑÊÕµ½~");//²âÊÔÊÕµ½ĞÅÏ¢Ê±È«¾Ö·¢ËÍÏûÏ¢  
+            webSocket.send("~Got message~" + message);
+        }
+//        sendInAllChannel("~Got message~" + message);//æµ‹è¯•æ”¶åˆ°ä¿¡æ¯æ—¶å…¨å±€å‘é€æ¶ˆæ¯
     }
 
 
@@ -81,8 +88,8 @@ public class ChatWebSocket extends WebSocketServer {
         Set<String> setList = socketMap.keySet();
         for (String string : setList) {
             if (socketMap.get(string).contains(conn)) {
-                socketMap.get(string).remove(conn);//É¾³ıÁ¬½Ó  
-                if (socketMap.get(string).isEmpty()) {//Á¬½ÓÎª¿ÕÊ±Çå³ı  
+                socketMap.get(string).remove(conn);//åˆ é™¤è¿æ¥  
+                if (socketMap.get(string).isEmpty()) {//è¿æ¥ä¸ºç©ºæ—¶æ¸…é™¤  
                     socketMap.remove(string);
                 }
                 break;
@@ -91,7 +98,7 @@ public class ChatWebSocket extends WebSocketServer {
     }
 
     /**
-     * ·¢ËÍÏûÏ¢µ½Ä³Ò»¸öÁ¬½Ó 
+     * å‘é€æ¶ˆæ¯åˆ°æŸä¸€ä¸ªè¿æ¥ 
      * @param channel
      * @param message
      */
@@ -103,7 +110,7 @@ public class ChatWebSocket extends WebSocketServer {
     }
 
     /**
-     * ·¢ËÍÏûÏ¢µ½ËùÓĞÁ¬½Ó 
+     * å‘é€æ¶ˆæ¯åˆ°æ‰€æœ‰è¿æ¥ 
      * @param message
      */
     public void sendInAllChannel(String message){
