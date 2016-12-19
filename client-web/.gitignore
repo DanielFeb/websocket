@@ -1,3 +1,7 @@
 node_modules/
+<<<<<<< HEAD
 *.sublime*
+=======
+*sublime*
+>>>>>>> f81789b74c4f9c26d1686ad2eb44d65242437f5f
 server.js
