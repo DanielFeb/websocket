@@ -7,7 +7,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 
 /**
  * @author: Daniel
- * Create Date：2016/10/16
+ * Create Date锛�016/10/16
  */
 @Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter {

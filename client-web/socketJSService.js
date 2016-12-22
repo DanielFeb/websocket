@@ -17,7 +17,7 @@ function connect() {
       
     //ws = new WebSocket('ws://192.168.10.107:8080/mspjapi/webSocketServer');/* (url.indexOf('sockjs') != -1) ?   
         //new SockJS(url, undefined, {protocols_whitelist: transports}) :  */  
-        ws = new SockJS("http://localhost:7777/webSocketServer/sockjs");  
+        ws = new SockJS("http://localhost:7777/myHandler/sockjs");  
         //console.log("http://192.168.10.107:8080/mspjapi/webSocketServer/sockjs");  
           
     ws.onopen = function () {  
